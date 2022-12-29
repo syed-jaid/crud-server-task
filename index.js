@@ -12,12 +12,6 @@ app.use(express.json());
 // Connact With MongoDb Database
 const uri = "mongodb+srv://rolex:VgygYMi2dIoYSpC8@alldata.xfh2r7v.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-    const collection = client.db("test").collection("devices");
-    // perform actions on the collection object
-    client.close();
-});
-
 
 // Create a async fucntion to all others activity
 async function run() {
@@ -25,6 +19,7 @@ async function run() {
         await client.connect();
         // Create Database to store Data
         const userCollection = client.db("Allusers").collection("info");
+        const infoCollection = client.db("Allusers").collection("userinfo");
 
         app.get("/selectingdata", async (req, res) => {
             const query = {};
@@ -33,13 +28,18 @@ async function run() {
             res.send(result);
         });
 
+        app.get("/userinfo/:id", async (req, res) => {
+            const id = req.params.id;
+            const result = await infoCollection.find({ _id: ObjectId(id) }).toArray();
+            res.send(result);
+        });
+
         app.post("/saveinfo", async (req, res) => {
             const user = req.body;
             console.log(user)
-            // const result = await userCollection.insertOne(user);
-            // res.send(result);
+            const result = await infoCollection.insertOne(user);
+            res.send(result);
         });
-
 
     } finally {
     }
@@ -54,3 +54,4 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
     console.log(`SJ Computers listening on port ${port}`);
 });
+
