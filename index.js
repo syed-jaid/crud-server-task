@@ -20,6 +20,10 @@ async function run() {
         // Create Database to store Data
         const userCollection = client.db("Allusers").collection("info");
         const infoCollection = client.db("Allusers").collection("userinfo");
+        // Root Api to cheack activity
+        app.get("/", (req, res) => {
+            res.send("Hello From SJ Computers!");
+        });
 
         app.get("/selectingdata", async (req, res) => {
             const query = {};
@@ -62,10 +66,6 @@ async function run() {
 }
 run().catch(console.dir);
 
-// Root Api to cheack activity
-app.get("/", (req, res) => {
-    res.send("Hello From SJ Computers!");
-});
 
 app.listen(port, () => {
     console.log(`SJ Computers listening on port ${port}`);
