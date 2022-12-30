@@ -34,6 +34,21 @@ async function run() {
             res.send(result);
         });
 
+
+        app.put("/userinfo/:id", async (req, res) => {
+            const id = req.params.id;
+            const info = req.body;
+            console.log(info)
+            const result = await infoCollection.updateOne(
+                { _id: ObjectId(id) }, // Find Data by query many time query type is "_id: id" Cheack on database
+                {
+                    $set: info,
+                },
+                { upsert: true } // define work
+            );
+            res.send({ result });
+        });
+
         app.post("/saveinfo", async (req, res) => {
             const user = req.body;
             console.log(user)
